@@ -1,3 +1,4 @@
+
 import { useState } from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
@@ -51,20 +52,24 @@ function App() {
     setVoz(informacion.results[0][0].transcript)
     //informacion.results[0][0].transcript
   }
-  
+
+  //Condicion para mostrar en pantalla el contenido
+  if (logueado) {
+    return (
+      <>
+        <h1>Conversor TTS y STT</h1>
+        <h2>Conversor texto a voz</h2>
+        <input type="text" value={texto} onChange={cambiarTexto} />
+        <button onClick={textoAVoz}>Convertir</button>
+        <h2>Conversor voz a texto</h2>
+        <button onClick={vozATexto}>Grabar</button>
+        {voz}
+    </>
+    )
+  }
+
   return (
     <>
-    {/* Condicion para mostrar en pantalla el contenido */}
-    {logueado ? (<>
-      <h1>Conversor TTS y STT</h1>
-      <h2>Conversor texto a voz</h2>
-      <input type="text" value={texto} onChange={cambiarTexto}/>
-      <button onClick={textoAVoz}>Convertir</button>
-      <h2>Conversor voz a texto</h2>
-      <button onClick={vozATexto}>Grabar</button>
-      {voz}
-    </>) : (
-      <>
         <h1>Inicio de sesión</h1>
         <label htmlFor="usuario">Usuario: 
           <input id="usuario" type="text" value={usuario} onChange={cambiarUsuario} />
@@ -73,8 +78,6 @@ function App() {
           <input id="clave" type="password" value={clave} onChange={cambiarClave} />
           </label>
           <button type="submit"onClick={ingresar}>Ingresar</button>
-          </>
-          )}
     </>
   )
 }
