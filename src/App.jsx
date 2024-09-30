@@ -8,7 +8,8 @@ function App() {
   const [usuario, setUsuario] = useState('') // Estado para guardar el usuario
   const [clave, setClave] = useState('') // Estado para guardar la clave
   const [logueado, setLogueado] = useState(false) // Estado para saber si el usuario está logueado
-  const [texto, setTexto] = useState('') // Estado para guardar el input 
+  const [texto, setTexto] = useState('') // Estado para guardar el input
+  const [voz, setVoz] = useState('')
 
   // Funcion para cambiar el valor del usuario
   function cambiarUsuario (evento) {
@@ -47,8 +48,10 @@ function App() {
   }
   function resultado (informacion) {
     console.log(informacion.results[0][0].transcript)
+    setVoz(informacion.results[0][0].transcript)
     //informacion.results[0][0].transcript
   }
+  
   return (
     <>
     {/* Condicion para mostrar en pantalla el contenido */}
@@ -58,8 +61,8 @@ function App() {
       <input type="text" value={texto} onChange={cambiarTexto}/>
       <button onClick={textoAVoz}>Convertir</button>
       <h2>Conversor voz a texto</h2>
-      <button onClick={vozATexto}
-      >Grabar</button>
+      <button onClick={vozATexto}>Grabar</button>
+      {voz}
     </>) : (
       <>
         <h1>Inicio de sesión</h1>
