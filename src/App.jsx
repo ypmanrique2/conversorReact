@@ -5,27 +5,41 @@ import './App.css'
 import Conversor from './Conversor'
 
 function App() {
-  const [usuario, setUsuario] = useState('') // Estado para guardar el usuario
-  const [clave, setClave] = useState('') // Estado para guardar la clave
-  const [logueado, setLogueado] = useState(false) // Estado para saber si el usuario está logueado
-
-  function cambiarUsuario(evento) { // Funcion para cambiar el valor del usuario
+  // Estado para guardar el usuario
+  const [usuario, setUsuario] = useState('') 
+  // Estado para guardar la clave
+  const [clave, setClave] = useState('') 
+  // Estado para saber si el usuario está logueado
+  const [logueado, setLogueado] = useState(false) 
+  // Funcion para cambiar el valor del usuario
+  function cambiarUsuario(evento) { 
     setUsuario(evento.target.value)
   }
-
-  function cambiarClave(evento) { // Funcion para cambiar el valor de la clave
+  // Funcion para cambiar el valor de la clave
+  function cambiarClave(evento) { 
     setClave(evento.target.value)
   }
 
-  function ingresar() { // Funcion para ingresar al dar clicl en el boton
+  // Funcion para ingresar al dar clicl en el boton
+  async function ingresar() { 
     console.log("Usuario:", usuario);
     console.log("Clave:", clave);
+    const peticion = await fetch('http://localhost:3000/login?usuario='+ usuario +'&clave=' + clave)
+    const Response = await peticion.json()
+    console.log(Response.logueado,'Response')
+    
+    if (Response.logueado) {
+      setLogueado(true)
+    } else {
+      alert('Datos incorrectos')
+    }
+    /*}
     if (usuario === 'admin' && clave === 'admin') { // Si el usuario y la clave son admin
       alert('Datos correctos')
       setLogueado(true)
     } else { // Si el usuario y la clave no son admin
       alert('Datos incorrectos')
-    }
+    } */
   }
 
   if (logueado) {
