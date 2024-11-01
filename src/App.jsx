@@ -1,63 +1,113 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
-import Conversor from './Conversor'
+import { useState } from 'react';
+import './App.css';
+import Conversor from './Conversor';
 
 function App() {
-  // Estado para guardar el usuario
-  const [usuario, setUsuario] = useState('') 
-  // Estado para guardar la clave
-  const [clave, setClave] = useState('') 
-  // Estado para saber si el usuario está logueado
-  const [logueado, setLogueado] = useState(false) 
-  // Funcion para cambiar el valor del usuario
-  function cambiarUsuario(evento) { 
-    setUsuario(evento.target.value)
-  }
-  // Funcion para cambiar el valor de la clave
-  function cambiarClave(evento) { 
-    setClave(evento.target.value)
-  }
+    const [usuario, setUsuario] = useState('');
+    const [clave, setClave] = useState('');
+    const [nuevoUsuario, setNuevoUsuario] = useState('');
+    const [nuevaClave, setNuevaClave] = useState('');
+/*     const [usuarioId, setUsuarioId] = useState(''); // Para editar y eliminar */
+    const [mensajeRegistro, setMensajeRegistro] = useState('');
+    const [mensajeAccion, setMensajeAccion] = useState('');
+    const [logueado, setLogueado] = useState(false);
 
-  // Funcion para ingresar al dar clicl en el boton
-  async function ingresar() { 
-    console.log("Usuario:", usuario);
-    console.log("Clave:", clave);
-    const peticion = await fetch('http://localhost:3000/login?usuario='+ usuario +'&clave=' + clave)
-    const Response = await peticion.json()
-    console.log(Response.logueado,'Response')
-    
-    if (Response.logueado) {
-      setLogueado(true)
-    } else {
-      alert('Datos incorrectos')
+    function cambiarUsuario(evento) {
+        setUsuario(evento.target.value);
     }
-    /*}
-    if (usuario === 'admin' && clave === 'admin') { // Si el usuario y la clave son admin
-      alert('Datos correctos')
-      setLogueado(true)
-    } else { // Si el usuario y la clave no son admin
-      alert('Datos incorrectos')
+
+    function cambiarClave(evento) {
+        setClave(evento.target.value);
+    }
+
+    async function ingresar() {
+        const peticion = await fetch('http://localhost:3000/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ usuario, clave })
+        });
+        const respuesta = await peticion.json();
+
+        if (respuesta.logueado) {
+            setLogueado(true);
+        } else {
+            alert('Datos incorrectos');
+        }
+    }
+
+    async function registrar() {
+        const peticion = await fetch('http://localhost:3000/register', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ usuario: nuevoUsuario, clave: nuevaClave })
+        });
+
+        const respuesta = await peticion.text();
+        setMensajeRegistro(respuesta);
+    }
+
+/*     async function editarUsuario() {
+        const peticion = await fetch(`http://localhost:3000/user/${usuarioId}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ usuario: nuevoUsuario, clave: nuevaClave })
+        });
+
+        const respuesta = await peticion.text();
+        setMensajeAccion(respuesta);
+    }
+
+    async function eliminarUsuario() {
+        const peticion = await fetch(`http://localhost:3000/user/${usuarioId}`, {
+            method: 'DELETE'
+        });
+
+        const respuesta = await peticion.text();
+        setMensajeAccion(respuesta);
     } */
-  }
 
-  if (logueado) {
-    return (<Conversor />)
-  }
+    return (
+        <>
+            {logueado ? (
+                <Conversor />
+            ) : (
+                <>
+                    <h1>Inicio de sesión</h1>
+                    <label htmlFor="usuario">Usuario:
+                        <input id="usuario" type="text" value={usuario} onChange={cambiarUsuario} />
+                    </label>
+                    <label htmlFor="clave">Clave:
+                        <input id="clave" type="password" value={clave} onChange={cambiarClave} />
+                    </label>
+                    <button type="submit" onClick={ingresar}>Ingresar</button>
 
-  return (
-    <>
-      <h1>Inicio de sesión</h1>
-      <label htmlFor="usuario">Usuario:
-        <input id="usuario" type="text" value={usuario} onChange={cambiarUsuario} />
-      </label>
-      <label htmlFor="clave">Clave:
-        <input id="clave" type="password" value={clave} onChange={cambiarClave} />
-      </label>
-      <button type="submit" onClick={ingresar}>Ingresar</button>
-    </>
-  )
+                    <h1>Registro</h1>
+                    <label htmlFor="nuevoUsuario">Usuario:
+                        <input id="nuevoUsuario" type="text" value={nuevoUsuario} onChange={(e) => setNuevoUsuario(e.target.value)} />
+                    </label>
+                    <label htmlFor="nuevaClave">Clave:
+                        <input id="nuevaClave" type="password" value={nuevaClave} onChange={(e) => setNuevaClave(e.target.value)} />
+                    </label>
+                    <button type="submit" onClick={registrar}>Registrar</button>
+                    {mensajeRegistro && <p>{mensajeRegistro}</p>}
+
+{/*                     <h1>Editar Usuario</h1>
+                    <label htmlFor="usuarioId">ID del usuario a editar:
+                        <input id="usuarioId" type="text" value={usuarioId} onChange={(e) => setUsuarioId(e.target.value)} />
+                    </label>
+                    <button onClick={editarUsuario}>Editar Usuario</button>
+
+                    <h1>Eliminar Usuario</h1>
+                    <label htmlFor="usuarioIdEliminar">ID del usuario a eliminar:
+                        <input id="usuarioIdEliminar" type="text" value={usuarioId} onChange={(e) => setUsuarioId(e.target.value)} />
+                    </label>
+                    <button onClick={eliminarUsuario}>Eliminar Usuario</button> */}
+
+                    {mensajeAccion && <p>{mensajeAccion}</p>}
+                </>
+            )}
+        </>
+    );
 }
 
-export default App
+export default App;
