@@ -1,13 +1,13 @@
 import { useState } from 'react';
 import './App.css';
 import Conversor from './Conversor';
-
+//GA7-220501096-AA5-EV02
 function App() {
     const [usuario, setUsuario] = useState('');
     const [clave, setClave] = useState('');
     const [nuevoUsuario, setNuevoUsuario] = useState('');
     const [nuevaClave, setNuevaClave] = useState('');
-/*     const [usuarioId, setUsuarioId] = useState(''); // Para editar y eliminar */
+  //const [usuarioId, setUsuarioId] = useState(''); //
     const [mensajeRegistro, setMensajeRegistro] = useState('');
     const [mensajeAccion, setMensajeAccion] = useState('');
     const [logueado, setLogueado] = useState(false);
