@@ -1,13 +1,15 @@
 import { useState } from 'react';
 import './App.css';
 import Conversor from './Conversor';
-//GA7-220501096-AA5-EV02
+
 function App() {
     const [usuario, setUsuario] = useState('');
     const [clave, setClave] = useState('');
     const [nuevoUsuario, setNuevoUsuario] = useState('');
     const [nuevaClave, setNuevaClave] = useState('');
-  //const [usuarioId, setUsuarioId] = useState(''); //
+    const [usuarioId, setUsuarioId] = useState('');
+    const [nuevoUsuarioEditar, setNuevoUsuarioEditar] = useState('');
+    const [nuevaClaveEditar, setNuevaClaveEditar] = useState('');
     const [mensajeRegistro, setMensajeRegistro] = useState('');
     const [mensajeAccion, setMensajeAccion] = useState('');
     const [logueado, setLogueado] = useState(false);
@@ -46,11 +48,16 @@ function App() {
         setMensajeRegistro(respuesta);
     }
 
-/*     async function editarUsuario() {
+    async function editarUsuario() {
+        if (!usuarioId || !nuevoUsuarioEditar || !nuevaClaveEditar) {
+            alert('Por favor, asegúrate de que todos los campos están completos.');
+            return;
+        }
+
         const peticion = await fetch(`http://localhost:3000/user/${usuarioId}`, {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ usuario: nuevoUsuario, clave: nuevaClave })
+            body: JSON.stringify({ usuario: nuevoUsuarioEditar, clave: nuevaClaveEditar })
         });
 
         const respuesta = await peticion.text();
@@ -58,13 +65,18 @@ function App() {
     }
 
     async function eliminarUsuario() {
+        if (!usuarioId) {
+            alert('Por favor, ingresa un ID de usuario para eliminar.');
+            return;
+        }
+
         const peticion = await fetch(`http://localhost:3000/user/${usuarioId}`, {
             method: 'DELETE'
         });
 
         const respuesta = await peticion.text();
         setMensajeAccion(respuesta);
-    } */
+    }
 
     return (
         <>
@@ -91,17 +103,38 @@ function App() {
                     <button type="submit" onClick={registrar}>Registrar</button>
                     {mensajeRegistro && <p>{mensajeRegistro}</p>}
 
-{/*                     <h1>Editar Usuario</h1>
+                    <h1>Editar Usuario</h1>
                     <label htmlFor="usuarioId">ID del usuario a editar:
                         <input id="usuarioId" type="text" value={usuarioId} onChange={(e) => setUsuarioId(e.target.value)} />
+                    </label>
+                    <label htmlFor="nuevoUsuarioEditar">Nuevo Usuario:
+                        <input
+                            id="nuevoUsuarioEditar"
+                            type="text"
+                            value={nuevoUsuarioEditar}
+                            onChange={(e) => setNuevoUsuarioEditar(e.target.value)}
+                        />
+                    </label>
+                    <label htmlFor="nuevaClaveEditar">Nueva Clave:
+                        <input
+                            id="nuevaClaveEditar"
+                            type="password"
+                            value={nuevaClaveEditar}
+                            onChange={(e) => setNuevaClaveEditar(e.target.value)}
+                        />
                     </label>
                     <button onClick={editarUsuario}>Editar Usuario</button>
 
                     <h1>Eliminar Usuario</h1>
                     <label htmlFor="usuarioIdEliminar">ID del usuario a eliminar:
-                        <input id="usuarioIdEliminar" type="text" value={usuarioId} onChange={(e) => setUsuarioId(e.target.value)} />
+                        <input
+                            id="usuarioIdEliminar"
+                            type="text"
+                            value={usuarioId}
+                            onChange={(e) => setUsuarioId(e.target.value)}
+                        />
                     </label>
-                    <button onClick={eliminarUsuario}>Eliminar Usuario</button> */}
+                    <button onClick={eliminarUsuario}>Eliminar Usuario</button>
 
                     {mensajeAccion && <p>{mensajeAccion}</p>}
                 </>
