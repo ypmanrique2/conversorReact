@@ -26,14 +26,21 @@ function App() {
         const peticion = await fetch('http://localhost:3000/login', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ usuario, clave })
+            body: JSON.stringify({ usuario, clave }) // Asegúrate de que los datos son correctos
         });
-        const respuesta = await peticion.json();
-
-        if (respuesta.logueado) {
-            setLogueado(true);
-        } else {
-            alert('Datos incorrectos');
+    
+        // Verifica si la respuesta es JSON
+        try {
+            const respuesta = await peticion.json();
+    
+            if (respuesta.logueado) {
+                setLogueado(true);
+            } else {
+                alert('Datos incorrectos');
+            }
+        } catch (error) {
+            console.error('Error al procesar la respuesta del servidor', error);
+            alert('Error al conectar con el servidor');
         }
     }
 
@@ -44,7 +51,7 @@ function App() {
             body: JSON.stringify({ usuario: nuevoUsuario, clave: nuevaClave })
         });
 
-        const respuesta = await peticion.text();
+        const respuesta = await peticion.json();
         setMensajeRegistro(respuesta);
     }
 
@@ -53,15 +60,24 @@ function App() {
             alert('Por favor, asegúrate de que todos los campos están completos.');
             return;
         }
-
-        const peticion = await fetch(`http://localhost:3000/user/${usuarioId}`, {
-            method: 'PUT',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ usuario: nuevoUsuarioEditar, clave: nuevaClaveEditar })
-        });
-
-        const respuesta = await peticion.text();
-        setMensajeAccion(respuesta);
+    
+        try {
+            const peticion = await fetch(`http://localhost:3000/user/${usuarioId}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ usuario: nuevoUsuarioEditar, clave: nuevaClaveEditar })
+            });
+    
+            if (!peticion.ok) {
+                throw new Error('Error al actualizar el usuario');
+            }
+    
+            const respuesta = await peticion.json();
+            setMensajeAccion(respuesta.message);
+        } catch (error) {
+            console.error('Error en la edición:', error);
+            alert('Error al editar el usuario');
+        }
     }
 
     async function eliminarUsuario() {
@@ -74,7 +90,7 @@ function App() {
             method: 'DELETE'
         });
 
-        const respuesta = await peticion.text();
+        const respuesta = await peticion.json();
         setMensajeAccion(respuesta);
     }
 
