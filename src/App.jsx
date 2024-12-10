@@ -45,14 +45,23 @@ function App() {
     }
 
     async function registrar() {
-        const peticion = await fetch('http://localhost:3000/register', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ usuario: nuevoUsuario, clave: nuevaClave })
-        });
-
-        const respuesta = await peticion.json();
-        setMensajeRegistro(respuesta);
+        try {
+            const peticion = await fetch('http://localhost:3000/register', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ usuario: nuevoUsuario, clave: nuevaClave })
+            });
+    
+            if (!peticion.ok) {
+                throw new Error('Error al registrar el usuario');
+            }
+    
+            const respuesta = await peticion.json();
+            setMensajeRegistro(respuesta.message);
+        } catch (error) {
+            console.error('Error en el registro:', error);
+            alert('Error al conectar con el servidor');
+        }
     }
 
     async function editarUsuario() {
@@ -91,7 +100,7 @@ function App() {
         });
 
         const respuesta = await peticion.json();
-        setMensajeAccion(respuesta);
+        setMensajeAccion(respuesta.message);
     }
 
     return (
